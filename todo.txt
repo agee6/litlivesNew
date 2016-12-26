@@ -1,0 +1,28 @@
+Esto es todo lo que tengo que hacer:
+
+### Housekeeping
+
+
+Find a way toc get full texts of books.
+If txt files or in some way readable, make a way to do various word analyses
+on said txts.
+
+
+General things that have to happen:
+
+Flow of new app:
+
+Arrives at site: a list of the most recent long-form articles
+
+top corner: place to log in
+
+When not logged in all you can do is browse articles,
+
+Search books
+
+
+pages: article index,
+
+Book search results,
+
+Article search results

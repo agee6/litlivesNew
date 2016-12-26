@@ -4,18 +4,14 @@ var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var IndexRoute = ReactRouter.IndexRoute;
-var Search = require('./components/Search.jsx');
-var Desk = require('./components/Desk.jsx');
 var APIUtil = require('./util/APIUtil.js');
 var root = document.getElementById('reactContent');
 // var cb = root.getAttribute("data-has-book");
 var History = require('react-router').History;
-var Navbar = require('./components/Navbar.jsx');
 var UserStore = require('./stores/UserStore.js');
 var ApiActions = require('./actions/api_actions');
 // var Analyses = require('./components/AnalysesComponents/Analyses.jsx');
 // var AnalysisShow = require('./components/AnalysesComponents/AnalysisShow.jsx');
-var SearchResults = require('./components/SearchResults.jsx');
 
 var App = React.createClass({
   mixins:[History],
@@ -47,19 +43,14 @@ var App = React.createClass({
   render: function(){
     return (
       <div>
-        <Navbar />
-
-        {this.props.children}
+        <h2>"This is React!!!!"</h2>
       </div>
     );
   }
 });
 var routes = (
   <Route path="/" component={App}>
-    <Route path="/Search" component={Search}/>
-    <Route path="/Desk" component={Desk} />
 
-    <Route path="/SearchResults" component={SearchResults} />
   </Route>
 );
 

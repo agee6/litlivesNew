@@ -7,43 +7,43 @@ var IndexRoute = ReactRouter.IndexRoute;
 var APIUtil = require('./util/APIUtil.js');
 var root = document.getElementById('reactContent');
 // var cb = root.getAttribute("data-has-book");
-var History = require('react-router').History;
+// var History = require('react-router').History;
+var AddForm = require('./AddBook.jsx');
 var UserStore = require('./stores/UserStore.js');
 var ApiActions = require('./actions/api_actions');
 // var Analyses = require('./components/AnalysesComponents/Analyses.jsx');
 // var AnalysisShow = require('./components/AnalysesComponents/AnalysisShow.jsx');
 
 var App = React.createClass({
-  mixins:[History],
+  // /mixins:[History],
   getInitialState: function(){
-    return({loggedIn: UserStore.loggedIn()});
+    return({showAddForm: false});
   },
   componentDidMount: function(){
-    APIUtil.getCurrentUser();
-    if(this.state.loggedIn){
-      APIUtil.getUserBooks();
-      APIUtil.getCurrentBook();
-    }
-    UserStore.addListener(this._onChange);
-    this.history.push({pathname: "/Search"});
 
   },
   _onChange: function(){
-    if(UserStore.loggedIn()){
-      APIUtil.getUserBooks();
-      APIUtil.getCurrentBook();
-    }else{
-      // ApiActions.emptyShelves();
-      // ApiActions.deleteCurrentBook();
 
+
+  },
+  addClick: function(){
+    console.log("banana"); 
+    this.setState({showAddForm:true})
+  },
+
+  render: function(){
+    if(this.state.showAddForm){
+      var addForm = <AddForm />
+    }else{
+      var addForm = <div />
     }
 
-    this.setState({loggedIn: UserStore.loggedIn()});
-  },
-  render: function(){
     return (
       <div>
         <h2>"This is React!!!!"</h2>
+        <div onClick={this.addClick}>"Add book"</div>
+        {addForm}
+        <div>What in the actual banana is going on</div>
       </div>
     );
   }
@@ -55,12 +55,5 @@ var routes = (
 );
 
 document.addEventListener("DOMContentLoaded", function(){
-  ReactDOM.render(<Router>{routes}</Router>, root);
+  ReactDOM.render(<App />, root);
 });
-
-
-//to add:
-// <Route path="/Analyses" >
-//   <IndexRoute component={Analyses} />
-//   <Route path="/:id" component={AnalysisShow} />
-// </Route>

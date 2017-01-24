@@ -55,8 +55,9 @@
 	var APIUtil = __webpack_require__(233);
 	var root = document.getElementById('reactContent');
 	// var cb = root.getAttribute("data-has-book");
-	var History = __webpack_require__(178).History;
-	var UserStore = __webpack_require__(244);
+	// var History = require('react-router').History;
+	var AddForm = __webpack_require__(244);
+	var UserStore = __webpack_require__(245);
 	var ApiActions = __webpack_require__(234);
 	// var Analyses = require('./components/AnalysesComponents/Analyses.jsx');
 	// var AnalysisShow = require('./components/AnalysesComponents/AnalysisShow.jsx');
@@ -64,32 +65,24 @@
 	var App = React.createClass({
 	  displayName: 'App',
 	
-	  mixins: [History],
+	  // /mixins:[History],
 	  getInitialState: function getInitialState() {
-	    return { loggedIn: UserStore.loggedIn() };
+	    return { showAddForm: false };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    APIUtil.getCurrentUser();
-	    if (this.state.loggedIn) {
-	      APIUtil.getUserBooks();
-	      APIUtil.getCurrentBook();
-	    }
-	    UserStore.addListener(this._onChange);
-	    this.history.push({ pathname: "/Search" });
+	  componentDidMount: function componentDidMount() {},
+	  _onChange: function _onChange() {},
+	  addClick: function addClick() {
+	    console.log("banana");
+	    this.setState({ showAddForm: true });
 	  },
-	  _onChange: function _onChange() {
-	    if (UserStore.loggedIn()) {
-	      APIUtil.getUserBooks();
-	      APIUtil.getCurrentBook();
-	    } else {
-	      // ApiActions.emptyShelves();
-	      // ApiActions.deleteCurrentBook();
 	
-	    }
-	
-	    this.setState({ loggedIn: UserStore.loggedIn() });
-	  },
 	  render: function render() {
+	    if (this.state.showAddForm) {
+	      var addForm = React.createElement(AddForm, null);
+	    } else {
+	      var addForm = React.createElement('div', null);
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -97,6 +90,17 @@
 	        'h2',
 	        null,
 	        '"This is React!!!!"'
+	      ),
+	      React.createElement(
+	        'div',
+	        { onClick: this.addClick },
+	        '"Add book"'
+	      ),
+	      addForm,
+	      React.createElement(
+	        'div',
+	        null,
+	        'What in the actual banana is going on'
 	      )
 	    );
 	  }
@@ -104,18 +108,8 @@
 	var routes = React.createElement(Route, { path: '/', component: App });
 	
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(React.createElement(
-	    Router,
-	    null,
-	    routes
-	  ), root);
+	  ReactDOM.render(React.createElement(App, null), root);
 	});
-	
-	//to add:
-	// <Route path="/Analyses" >
-	//   <IndexRoute component={Analyses} />
-	//   <Route path="/:id" component={AnalysisShow} />
-	// </Route>
 
 /***/ },
 /* 1 */
@@ -26630,6 +26624,15 @@
 	
 	        ApiActions.receiveUserBooks(books);
 	      } });
+	  },
+	
+	  addBook: function addBook(bookInfo) {
+	    var uri = 'api/books/create';
+	    $.ajax({
+	      url: uri,
+	      type: "PATCH",
+	      data: bookInfo
+	    });
 	  }
 	
 	};
@@ -27145,7 +27148,76 @@
 
 	'use strict';
 	
-	var Store = __webpack_require__(245).Store;
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//import React from 'react';
+	var React = __webpack_require__(1);
+	
+	var AddForm = function (_React$Component) {
+	  _inherits(AddForm, _React$Component);
+	
+	  function AddForm(props) {
+	    _classCallCheck(this, AddForm);
+	
+	    var _this = _possibleConstructorReturn(this, (AddForm.__proto__ || Object.getPrototypeOf(AddForm)).call(this, props));
+	
+	    _this.state = { value: '' };
+	
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.handleSubmit = _this.handleSubmit.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(AddForm, [{
+	    key: 'handleChange',
+	    value: function handleChange(event) {
+	      this.setState({ value: event.target.value });
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(event) {
+	      alert('A name was submitted: ' + this.state.value);
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Name:',
+	          React.createElement('input', { type: 'text', value: this.state.value, onChange: this.handleChange })
+	        ),
+	        React.createElement('input', { type: 'submit', value: 'Submit' })
+	      );
+	    }
+	  }]);
+	
+	  return AddForm;
+	}(React.Component);
+	
+	exports.default = AddForm;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(246).Store;
 	var _users = [];
 	var needsToLogin = false;
 	var UserConstants = __webpack_require__(242);
@@ -27198,7 +27270,7 @@
 	module.exports = UserStore;
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27210,15 +27282,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(246);
-	module.exports.MapStore = __webpack_require__(249);
-	module.exports.Mixin = __webpack_require__(259);
-	module.exports.ReduceStore = __webpack_require__(250);
-	module.exports.Store = __webpack_require__(251);
+	module.exports.Container = __webpack_require__(247);
+	module.exports.MapStore = __webpack_require__(250);
+	module.exports.Mixin = __webpack_require__(260);
+	module.exports.ReduceStore = __webpack_require__(251);
+	module.exports.Store = __webpack_require__(252);
 
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27240,10 +27312,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(247);
+	var FluxStoreGroup = __webpack_require__(248);
 	
 	var invariant = __webpack_require__(238);
-	var shallowEqual = __webpack_require__(248);
+	var shallowEqual = __webpack_require__(249);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -27401,7 +27473,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27482,7 +27554,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports) {
 
 	/**
@@ -27537,7 +27609,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27558,8 +27630,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(250);
-	var Immutable = __webpack_require__(258);
+	var FluxReduceStore = __webpack_require__(251);
+	var Immutable = __webpack_require__(259);
 	
 	var invariant = __webpack_require__(238);
 	
@@ -27687,7 +27759,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27708,9 +27780,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(251);
+	var FluxStore = __webpack_require__(252);
 	
-	var abstractMethod = __webpack_require__(257);
+	var abstractMethod = __webpack_require__(258);
 	var invariant = __webpack_require__(238);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -27794,7 +27866,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27813,7 +27885,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(252);
+	var _require = __webpack_require__(253);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -27977,7 +28049,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27990,15 +28062,15 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(253),
-	  EmitterSubscription : __webpack_require__(254)
+	  EventEmitter: __webpack_require__(254),
+	  EmitterSubscription : __webpack_require__(255)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28017,8 +28089,8 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(254);
-	var EventSubscriptionVendor = __webpack_require__(256);
+	var EmitterSubscription = __webpack_require__(255);
+	var EventSubscriptionVendor = __webpack_require__(257);
 	
 	var emptyFunction = __webpack_require__(12);
 	var invariant = __webpack_require__(8);
@@ -28195,7 +28267,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28216,7 +28288,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(255);
+	var EventSubscription = __webpack_require__(256);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -28248,7 +28320,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports) {
 
 	/**
@@ -28302,7 +28374,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28411,7 +28483,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28438,7 +28510,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33425,7 +33497,7 @@
 	}));
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -33442,7 +33514,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(247);
+	var FluxStoreGroup = __webpack_require__(248);
 	
 	var invariant = __webpack_require__(238);
 	

@@ -196,6 +196,15 @@ var APIUtil = {
     }});
 
 
+  },
+
+  addBook: function(bookInfo){
+    var uri = 'api/books/create'
+    $.ajax({
+      url: uri,
+      type: "PATCH",
+      data: bookInfo
+    })
   }
 
 
